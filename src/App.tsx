@@ -181,45 +181,44 @@ const WORK_ITEMS = [
   { id: 'afb-league', icon: Users, label: "AFB League", imageUrl: "/afb-league.png", description: "Community-driven sports branding and digital ecosystem for local football leagues in Nigeria." },
 ];
 
-const WorkItem = ({ label, imageUrl, index, slug }: { label: string, imageUrl: string, index: number, slug: string }) => {
+const WorkItem = React.memo(({ label, imageUrl, index, slug }: { label: string, imageUrl: string, index: number, slug: string }) => {
   const [imgSrc, setImgSrc] = useState(imageUrl);
   const fallbackImage = `https://picsum.photos/seed/${slug}/800/500`;
 
   return (
     <Link to={`/work/${slug}`} className="block w-full">
       <motion.div 
-        initial={{ opacity: 0, y: 40 }}
+        initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1.2, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
-        className="flex flex-col items-center group cursor-pointer w-full hover:-translate-y-3 transition-all duration-700"
-        style={{ transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ duration: 0.8, delay: index * 0.05, ease: [0.16, 1, 0.3, 1] }}
+        className="flex flex-col items-center group cursor-pointer w-full will-change-[transform,opacity] hover:-translate-y-2 transition-transform duration-500"
       >
         <div 
-          className="relative w-full aspect-[1.6/1] mt-4 group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all duration-700 overflow-hidden rounded-[4px] bg-stone-100"
-          style={{ transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' }}
+          className="relative w-full aspect-[1.6/1] mt-4 group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.2)] transition-shadow duration-500 overflow-hidden rounded-[4px] bg-stone-100"
         >
           <motion.img 
-            initial={{ scale: 1.1, opacity: 0 }}
+            initial={{ scale: 1.05, opacity: 0 }}
             whileInView={{ scale: 1, opacity: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 1.2, ease: "easeOut" }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
             src={imgSrc} 
             alt={label} 
-            className="w-full h-full object-cover" 
+            loading="lazy"
+            decoding="async"
+            className="w-full h-full object-cover will-change-transform" 
             referrerPolicy="no-referrer"
             onError={() => setImgSrc(fallbackImage)}
           />
-          {/* Subtle Overlay */}
-          <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-700"></div>
+          <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-500"></div>
         </div>
-        <p className="mt-4 font-sans text-[9px] md:text-[10px] font-bold uppercase tracking-[0.3em] text-center leading-tight group-hover:text-jedo-red transition-colors duration-500">
+        <p className="mt-4 font-sans text-[9px] md:text-[10px] font-bold uppercase tracking-[0.3em] text-center leading-tight group-hover:text-jedo-red transition-colors duration-300">
           {label}
         </p>
       </motion.div>
     </Link>
   );
-};
+});
 
 const BackToTop = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -308,7 +307,7 @@ const HorizontalWork = () => {
              <h2 className="font-serif text-6xl lg:text-8xl uppercase tracking-tightest font-semibold">Our Work</h2>
            </Reveal>
         </div>
-        <div ref={sectionRef} className="flex gap-16 lg:gap-24 px-10 lg:px-20 pb-32 w-max items-end">
+        <div ref={sectionRef} className="flex gap-16 lg:gap-24 px-10 lg:px-20 pb-32 w-max items-end will-change-transform">
           {WORK_ITEMS.map((item, i) => (
             <div key={i} className="w-[400px] lg:w-[500px] flex-shrink-0">
               <WorkItem 
@@ -642,14 +641,16 @@ const GalleryPage = () => (
             key={i}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: i * 0.1 }}
-            className="aspect-[3/4] bg-black relative overflow-hidden group cursor-crosshair"
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ delay: i * 0.05, duration: 0.8 }}
+            className="aspect-[3/4] bg-black relative overflow-hidden group cursor-crosshair will-change-[transform,opacity]"
           >
             <img 
               src={`https://picsum.photos/seed/gallery-${i}/800/1200`} 
               alt={`Gallery Item ${i}`}
-              className="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000"
+              loading="lazy"
+              decoding="async"
+              className="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000 will-change-transform"
               style={{ transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' }}
               referrerPolicy="no-referrer"
             />
@@ -750,12 +751,13 @@ const WorkDetailPage = () => {
             <Reveal delay={0.2}>
               <div className="relative aspect-[1.6/1] bg-stone-100 rounded-[4px] flex items-center justify-center overflow-hidden shadow-2xl">
                 <motion.img 
-                  initial={{ scale: 1.1, opacity: 0 }}
+                  initial={{ scale: 1.05, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
-                  transition={{ duration: 1.2, ease: "easeOut" }}
+                  transition={{ duration: 0.8, ease: "easeOut" }}
                   src={imgSrc} 
                   alt={work.label} 
-                  className="w-full h-full object-cover" 
+                  decoding="async"
+                  className="w-full h-full object-cover will-change-[transform,opacity]" 
                   referrerPolicy="no-referrer" 
                   onError={() => setImgSrc(fallbackImage)}
                 />
