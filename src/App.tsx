@@ -5,7 +5,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { BrowserRouter as Router, Routes, Route, useLocation, Link, NavLink } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, Link, NavLink, useParams } from 'react-router-dom';
 import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -14,13 +14,31 @@ import { Instagram, Mail, Trophy, Footprints, Palette, Car, Target, Layout, Glob
 gsap.registerPlugin(ScrollTrigger);
 
 const Logo = ({ className = "h-8 md:h-10" }: { className?: string }) => (
-  <Link to="/" className="flex items-center">
-    <img 
-      src="/logo.svg" 
-      alt="JEDO Group Logo" 
-      className={className}
-      referrerPolicy="no-referrer"
-    />
+  <Link to="/" className="flex items-center group">
+    <svg 
+      className={`${className} w-auto h-full transition-transform duration-500 group-hover:scale-105`}
+      viewBox="0 0 220 70" 
+      fill="none" 
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <g stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
+        {/* J */}
+        <path d="M10 15H50V45C50 56 41 65 30 65C19 65 10 56 10 45V40" />
+        <path d="M20 25H40V45C40 50.5 35.5 55 30 55C24.5 55 20 50.5 20 45" />
+        
+        {/* E */}
+        <path d="M65 15V65H105M65 40H95M65 15H105" />
+        <path d="M75 25V55H95M75 40H85M75 25H95" />
+
+        {/* D */}
+        <path d="M120 15V65H145C158.8 65 170 53.8 170 40C170 26.2 158.8 15 145 15H120Z" />
+        <path d="M130 25V55H145C153.3 55 160 48.3 160 40C160 31.7 153.3 25 145 25H130" />
+
+        {/* O */}
+        <circle cx="200" cy="40" r="25" />
+        <circle cx="200" cy="40" r="15" />
+      </g>
+    </svg>
   </Link>
 );
 
@@ -152,60 +170,73 @@ const Reveal = ({ children, delay = 0, className = "" }: { children: React.React
   </motion.div>
 );
 
-const WorkItem = ({ icon: Icon, label, customLogo, imageUrl, index }: { icon?: any, label: string, customLogo?: string, imageUrl?: string, index: number }) => (
-  <motion.div 
-    initial={{ opacity: 0, y: 40 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    transition={{ duration: 1.2, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
-    className="flex flex-col items-center group cursor-pointer w-full hover:-translate-y-3 transition-all duration-700"
-    style={{ transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' }}
-  >
-    <div 
-      className="relative w-full aspect-[1.6/1] mt-4 group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all duration-700"
+const WORK_ITEMS = [
+  { id: 'chancellors-cup', icon: Trophy, label: "Chancellors Cup", description: "A prestigious football tournament branding and identity project for the elite collegiate sports landscape." },
+  { id: 'football-posters', icon: Footprints, label: "Football Posters", description: "Dynamic sports poster designs capturing the raw energy and movement of professional football." },
+  { id: 'digital-art', icon: Palette, label: "Digital Art", description: "Exploring the boundaries of digital expression through avant-garde pieces that merge tech and tradition." },
+  { id: 'car-posters', icon: Car, label: "Car Posters", description: "Sleek automotive designs celebrating the intersection of high-performance engineering and visual speed." },
+  { id: 'ballmania', icon: Target, label: "Ballmania", description: "A vibrant sports-themed design series crafted for the modern athlete and digital-first fanbases." },
+  { id: 'logos', customLogo: "LOGOS", label: "Logos", description: "Crafting unique, scalable visual identities for forward-thinking brands across the global market." },
+  { id: 'web-infrastructure', icon: Globe, label: "Web Infrastructure", description: "Building robust, high-performance digital backbones for modern enterprises and creative conglomerates." },
+  { id: 'afb-league', icon: Users, label: "AFB League", description: "Community-driven sports branding and digital ecosystem for local football leagues in Nigeria." },
+];
+
+const WorkItem = ({ icon: Icon, label, customLogo, imageUrl, index, slug }: { icon?: any, label: string, customLogo?: string, imageUrl?: string, index: number, slug: string }) => (
+  <Link to={`/work/${slug}`} className="block w-full">
+    <motion.div 
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 1.2, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+      className="flex flex-col items-center group cursor-pointer w-full hover:-translate-y-3 transition-all duration-700"
       style={{ transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' }}
     >
-      {/* Folder Tab */}
-      <div className="absolute -top-[10px] left-0 w-[42%] h-[11px] bg-black rounded-t-[2px]"></div>
-      {/* Folder Body */}
-      <div className="w-full h-full bg-black rounded-b-[2px] rounded-tr-[2px] flex items-center justify-center overflow-hidden">
-        {imageUrl ? (
-          <motion.img 
-            initial={{ scale: 1.2 }}
-            whileInView={{ scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1.2, ease: "easeOut" }}
-            src={imageUrl} 
-            alt={label} 
-            className="w-full h-full object-cover" 
-            referrerPolicy="no-referrer" 
-          />
-        ) : customLogo ? (
-          <motion.span 
-            initial={{ scale: 0.8, opacity: 0 }}
-            whileInView={{ scale: 1, opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2 + index * 0.1 }}
-            className="text-white font-black text-2xl tracking-tighter italic"
-          >
-            {customLogo}
-          </motion.span>
-        ) : (
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            whileInView={{ scale: 1, opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2 + index * 0.1 }}
-          >
-            <Icon className="text-white w-14 h-14 md:w-20 md:h-20" strokeWidth={0.75} />
-          </motion.div>
-        )}
+      <div 
+        className="relative w-full aspect-[1.6/1] mt-4 group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all duration-700"
+        style={{ transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' }}
+      >
+        {/* Folder Tab */}
+        <div className="absolute -top-[10px] left-0 w-[42%] h-[11px] bg-black rounded-t-[2px]"></div>
+        {/* Folder Body */}
+        <div className="w-full h-full bg-black rounded-b-[2px] rounded-tr-[2px] flex items-center justify-center overflow-hidden">
+          {imageUrl ? (
+            <motion.img 
+              initial={{ scale: 1.2 }}
+              whileInView={{ scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1.2, ease: "easeOut" }}
+              src={imageUrl} 
+              alt={label} 
+              className="w-full h-full object-cover" 
+              referrerPolicy="no-referrer" 
+            />
+          ) : customLogo ? (
+            <motion.span 
+              initial={{ scale: 0.8, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 + index * 0.1 }}
+              className="text-white font-black text-2xl tracking-tighter italic"
+            >
+              {customLogo}
+            </motion.span>
+          ) : (
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 + index * 0.1 }}
+            >
+              <Icon className="text-white w-14 h-14 md:w-20 md:h-20" strokeWidth={0.75} />
+            </motion.div>
+          )}
+        </div>
       </div>
-    </div>
-    <p className="mt-4 font-sans text-[9px] md:text-[10px] font-bold uppercase tracking-[0.3em] text-center leading-tight">
-      {label}
-    </p>
-  </motion.div>
+      <p className="mt-4 font-sans text-[9px] md:text-[10px] font-bold uppercase tracking-[0.3em] text-center leading-tight">
+        {label}
+      </p>
+    </motion.div>
+  </Link>
 );
 
 const BackToTop = () => {
@@ -253,17 +284,6 @@ const HorizontalWork = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLDivElement>(null);
 
-  const workItems = [
-    { icon: Trophy, label: "Chancellors Cup" },
-    { icon: Footprints, label: "Football Posters" },
-    { icon: Palette, label: "Digital Art" },
-    { icon: Car, label: "Car Posters" },
-    { icon: Target, label: "Ballmania" },
-    { customLogo: "LOGOS", label: "Logos" },
-    { icon: Globe, label: "Web Infrastructure" },
-    { icon: Users, label: "AFB League" },
-  ];
-
   useEffect(() => {
     let mm = gsap.matchMedia();
 
@@ -283,7 +303,7 @@ const HorizontalWork = () => {
           start: "top top",
           end: () => "+=" + scrollWidth,
           snap: {
-            snapTo: 1 / (workItems.length - 1),
+            snapTo: 1 / (WORK_ITEMS.length - 1),
             duration: { min: 0.3, max: 0.8 },
             delay: 0.1,
             ease: "power2.inOut"
@@ -301,19 +321,20 @@ const HorizontalWork = () => {
     <div id="work" className="scroll-mt-24">
       {/* Desktop Horizontal Scroll */}
       <div ref={triggerRef} className="hidden md:block overflow-hidden border-2 border-black m-10 bg-white min-h-screen">
-        <div className="pt-24 pb-12 px-20">
+        <div className="pt-24 pb-12 px-10 lg:px-20">
            <Reveal>
-             <h2 className="font-serif text-8xl uppercase tracking-tightest font-semibold">Our Work</h2>
+             <h2 className="font-serif text-6xl lg:text-8xl uppercase tracking-tightest font-semibold">Our Work</h2>
            </Reveal>
         </div>
-        <div ref={sectionRef} className="flex gap-24 px-20 pb-32 w-max items-end">
-          {workItems.map((item, i) => (
-            <div key={i} className="w-[500px] flex-shrink-0">
+        <div ref={sectionRef} className="flex gap-16 lg:gap-24 px-10 lg:px-20 pb-32 w-max items-end">
+          {WORK_ITEMS.map((item, i) => (
+            <div key={i} className="w-[400px] lg:w-[500px] flex-shrink-0">
               <WorkItem 
                 icon={item.icon} 
                 label={item.label} 
                 customLogo={item.customLogo} 
                 index={i} 
+                slug={item.id}
               />
             </div>
           ))}
@@ -326,13 +347,14 @@ const HorizontalWork = () => {
       <div className="md:hidden py-16 px-6 border-2 border-black m-6">
         <h2 className="font-serif text-5xl uppercase text-center mb-16 tracking-tightest font-semibold">Our Work</h2>
         <div className="grid grid-cols-1 gap-y-16">
-          {workItems.map((item, i) => (
+          {WORK_ITEMS.map((item, i) => (
             <div key={i}>
               <WorkItem 
                 icon={item.icon} 
                 label={item.label} 
                 customLogo={item.customLogo} 
                 index={i} 
+                slug={item.id}
               />
             </div>
           ))}
@@ -372,7 +394,125 @@ const PageTransition = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-const HomePage = () => (
+const ContactModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) => {
+  const [formState, setFormState] = useState({ name: '', email: '', message: '' });
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitted(true);
+    setTimeout(() => {
+      setIsSubmitted(false);
+      onClose();
+      setFormState({ name: '', email: '', message: '' });
+    }, 3000);
+  };
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[200] flex items-center justify-center p-6 md:p-10 bg-black/95 backdrop-blur-md"
+        >
+          <motion.div
+            initial={{ scale: 0.95, opacity: 0, y: 30 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            exit={{ scale: 0.95, opacity: 0, y: 30 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            className="bg-white w-full max-w-3xl border-2 border-black p-8 md:p-16 relative overflow-hidden"
+          >
+            {/* Decorative Red Accent */}
+            <div className="absolute top-0 left-0 w-full h-2 bg-jedo-red"></div>
+            
+            <button 
+              onClick={onClose}
+              className="absolute top-8 right-8 text-black hover:text-jedo-red transition-colors z-10"
+              aria-label="Close form"
+            >
+              <X size={32} strokeWidth={2} />
+            </button>
+
+            {isSubmitted ? (
+              <div className="text-center py-20 flex flex-col items-center">
+                <motion.div
+                  initial={{ scale: 0, rotate: -45 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  className="w-24 h-24 bg-jedo-red rounded-full flex items-center justify-center mb-10 shadow-2xl"
+                >
+                  <Trophy className="text-white" size={48} strokeWidth={1.5} />
+                </motion.div>
+                <h3 className="font-serif text-5xl md:text-6xl uppercase mb-6 font-bold tracking-tightest">Message Received</h3>
+                <p className="font-sans text-sm md:text-base uppercase tracking-[0.4em] opacity-60 max-w-md mx-auto leading-relaxed">
+                  Our team will review your inquiry and get back to you shortly.
+                </p>
+              </div>
+            ) : (
+              <>
+                <div className="mb-12">
+                  <span className="font-sans text-[11px] font-bold uppercase tracking-[0.5em] text-jedo-red mb-4 block">Inquiry Form</span>
+                  <h2 className="font-serif text-5xl md:text-7xl uppercase font-bold tracking-tightest leading-none">
+                    Tell Us <br /> Everything
+                  </h2>
+                </div>
+
+                <form onSubmit={handleSubmit} className="space-y-10">
+                  <div className="grid md:grid-cols-2 gap-10">
+                    <div className="space-y-3">
+                      <label className="font-sans text-[10px] font-bold uppercase tracking-[0.3em] opacity-40">Full Name</label>
+                      <input 
+                        required
+                        type="text" 
+                        placeholder="YOUR NAME"
+                        className="w-full border-b-2 border-black py-4 focus:outline-none focus:border-jedo-red transition-colors font-sans text-lg uppercase tracking-wider placeholder:opacity-20"
+                        value={formState.name}
+                        onChange={(e) => setFormState({ ...formState, name: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-3">
+                      <label className="font-sans text-[10px] font-bold uppercase tracking-[0.3em] opacity-40">Email Address</label>
+                      <input 
+                        required
+                        type="email" 
+                        placeholder="YOUR@EMAIL.COM"
+                        className="w-full border-b-2 border-black py-4 focus:outline-none focus:border-jedo-red transition-colors font-sans text-lg uppercase tracking-wider placeholder:opacity-20"
+                        value={formState.email}
+                        onChange={(e) => setFormState({ ...formState, email: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <label className="font-sans text-[10px] font-bold uppercase tracking-[0.3em] opacity-40">What do you want to do?</label>
+                    <textarea 
+                      required
+                      rows={4}
+                      className="w-full border-2 border-black p-6 focus:outline-none focus:border-jedo-red transition-colors font-sans text-lg uppercase tracking-wider resize-none placeholder:opacity-20"
+                      placeholder="TELL US ABOUT YOUR PROJECT, ART INQUIRY, OR COLLABORATION..."
+                      value={formState.message}
+                      onChange={(e) => setFormState({ ...formState, message: e.target.value })}
+                    />
+                  </div>
+
+                  <button 
+                    type="submit"
+                    className="w-full bg-black text-white py-8 font-sans font-bold uppercase tracking-[0.5em] hover:bg-jedo-red transition-all duration-700 shadow-xl hover:shadow-jedo-red/20 active:scale-[0.98]"
+                  >
+                    Send Inquiry
+                  </button>
+                </form>
+              </>
+            )}
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
+
+const HomePage = ({ onContactClick }: { onContactClick: () => void }) => (
   <PageTransition>
     {/* Hero Section */}
     <SectionFrame id="home" className="relative justify-center items-center text-center px-6 py-20 overflow-hidden">
@@ -403,7 +543,7 @@ const HomePage = () => (
           <motion.h1 
             animate={{ y: [0, -10, 0] }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            className="font-serif text-5xl sm:text-7xl md:text-[110px] uppercase tracking-tightest leading-tightest mb-8 font-semibold"
+            className="font-serif text-4xl sm:text-6xl md:text-8xl lg:text-[110px] uppercase tracking-tightest leading-tightest mb-8 font-semibold"
           >
             The Man From Madeira
           </motion.h1>
@@ -437,7 +577,7 @@ const HomePage = () => (
         </Reveal>
         
         <Reveal delay={0.2}>
-          <h2 className="font-serif text-3xl sm:text-4xl md:text-[72px] uppercase leading-extra-tight tracking-tightest font-semibold">
+          <h2 className="font-serif text-2xl sm:text-4xl md:text-5xl lg:text-[72px] uppercase leading-extra-tight tracking-tightest font-semibold">
             JEDO Group is a leading design conglomerate in Nigeria. Their creations range from brand identity and logos, to fashion design. With the aim of becoming <span className="text-jedo-red italic">Digital Design Giants.</span>
           </h2>
         </Reveal>
@@ -451,12 +591,12 @@ const HomePage = () => (
     <SectionFrame id="contact" className="justify-center items-center text-center px-6 py-20 md:py-32">
       <div className="max-w-4xl">
         <Reveal>
-          <h2 className="font-serif text-5xl sm:text-6xl md:text-[100px] uppercase mb-10 md:mb-12 tracking-tightest font-semibold">
+          <h2 className="font-serif text-4xl sm:text-6xl md:text-8xl lg:text-[100px] uppercase mb-8 md:mb-12 tracking-tightest font-semibold">
             Where to contact us?
           </h2>
         </Reveal>
         
-        <Reveal delay={0.2} className="font-sans text-[10px] md:text-[13px] font-bold uppercase tracking-[0.25em] md:tracking-[0.35em] space-y-3 mb-16 md:mb-20 leading-relaxed text-center">
+        <Reveal delay={0.2} className="font-sans text-[9px] sm:text-[10px] md:text-[13px] font-bold uppercase tracking-[0.2em] sm:tracking-[0.25em] md:tracking-[0.35em] space-y-3 mb-12 md:mb-20 leading-relaxed text-center">
           <p>Looking for early access to art pieces?</p>
           <p>Or you want us to make one of your own?</p>
           <p className="opacity-50">You know where to find us.</p>
@@ -469,9 +609,12 @@ const HomePage = () => (
             </a>
           </Reveal>
           <Reveal delay={0.4}>
-            <a href="#" className="w-40 h-40 md:w-56 md:h-56 bg-black flex items-center justify-center rounded-[4px] hover:scale-[1.05] hover:-translate-y-2 hover:shadow-2xl hover:bg-jedo-red transition-all duration-300">
+            <button 
+              onClick={onContactClick}
+              className="w-40 h-40 md:w-56 md:h-56 bg-black flex items-center justify-center rounded-[4px] hover:scale-[1.05] hover:-translate-y-2 hover:shadow-2xl hover:bg-jedo-red transition-all duration-300 cursor-pointer"
+            >
               <Mail className="text-white w-16 h-16 md:w-24 md:h-24" strokeWidth={0.5} />
-            </a>
+            </button>
           </Reveal>
         </div>
       </div>
@@ -481,22 +624,22 @@ const HomePage = () => (
 
 const AboutPage = () => (
   <PageTransition>
-    <SectionFrame id="about-page" className="justify-center items-center px-6 md:px-32 py-20 md:py-32 bg-stone-50">
+    <SectionFrame id="about-page" className="justify-center items-center px-6 md:px-20 lg:px-32 py-20 md:py-32 bg-stone-50">
       <div className="max-w-6xl text-center">
         <Reveal>
           <span className="font-sans text-[11px] font-bold uppercase tracking-[0.5em] text-jedo-red mb-6 block">Our Story</span>
-          <h2 className="font-serif text-5xl md:text-[120px] uppercase mb-12 font-semibold tracking-tightest leading-none">
+          <h2 className="font-serif text-4xl sm:text-6xl md:text-8xl lg:text-[120px] uppercase mb-12 font-semibold tracking-tightest leading-none">
             Pioneering <br /> Digital <br /> Excellence
           </h2>
         </Reveal>
-        <div className="grid md:grid-cols-2 gap-16 text-left mt-20">
+        <div className="grid md:grid-cols-2 gap-10 lg:gap-16 text-left mt-10 lg:mt-20">
           <Reveal delay={0.2}>
-            <p className="font-sans text-lg md:text-xl uppercase tracking-widest leading-relaxed opacity-80">
+            <p className="font-sans text-base md:text-lg lg:text-xl uppercase tracking-widest leading-relaxed opacity-80">
               Founded in Lagos, JEDO Group emerged from a vision to redefine the African creative landscape. We don't just design; we engineer experiences that bridge the gap between heritage and high-tech.
             </p>
           </Reveal>
           <Reveal delay={0.3}>
-            <p className="font-sans text-lg md:text-xl uppercase tracking-widest leading-relaxed opacity-80">
+            <p className="font-sans text-base md:text-lg lg:text-xl uppercase tracking-widest leading-relaxed opacity-80">
               Our multidisciplinary approach allows us to navigate seamlessly between brand identity, digital infrastructure, and avant-garde fashion. We are the architects of the new digital age.
             </p>
           </Reveal>
@@ -508,12 +651,12 @@ const AboutPage = () => (
 
 const GalleryPage = () => (
   <PageTransition>
-    <SectionFrame id="gallery-page" className="px-6 md:px-20 py-20 md:py-32">
-      <Reveal className="mb-20">
-        <h2 className="font-serif text-6xl md:text-9xl uppercase font-semibold tracking-tightest">Art Gallery</h2>
+    <SectionFrame id="gallery-page" className="px-6 md:px-10 lg:px-20 py-20 md:py-32">
+      <Reveal className="mb-12 lg:mb-20">
+        <h2 className="font-serif text-5xl sm:text-7xl md:text-8xl lg:text-9xl uppercase font-semibold tracking-tightest">Art Gallery</h2>
         <p className="font-sans text-[11px] font-bold uppercase tracking-[0.4em] mt-4 opacity-60">Curated Masterpieces from Madeira</p>
       </Reveal>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-10">
         {[1, 2, 3, 4, 5, 6].map((i) => (
           <motion.div
             key={i}
@@ -552,20 +695,20 @@ const WorkPage = () => (
   </PageTransition>
 );
 
-const ContactPage = () => (
+const ContactPage = ({ onContactClick }: { onContactClick: () => void }) => (
   <PageTransition>
-    <SectionFrame id="contact-page" className="justify-center items-center text-center px-6 py-20 md:py-32 bg-black text-white">
+    <SectionFrame id="contact-page" className="justify-center items-center text-center px-6 md:px-20 lg:px-32 py-20 md:py-32 bg-black text-white">
       <div className="max-w-4xl">
         <Reveal>
           <span className="font-sans text-[11px] font-bold uppercase tracking-[0.5em] text-jedo-red mb-8 block">Connect</span>
-          <h2 className="font-serif text-5xl md:text-[100px] uppercase mb-12 font-semibold tracking-tightest leading-none">
+          <h2 className="font-serif text-4xl sm:text-6xl md:text-8xl lg:text-[100px] uppercase mb-12 font-semibold tracking-tightest leading-none">
             Let's Build <br /> The Future
           </h2>
         </Reveal>
         <Reveal delay={0.2}>
-          <div className="space-y-6 mb-20">
-            <p className="font-sans text-xl md:text-3xl uppercase tracking-[0.2em] font-light">hello@jedogroup.com</p>
-            <p className="font-sans text-sm md:text-lg uppercase tracking-[0.3em] opacity-60">Lagos, Nigeria · London, UK</p>
+          <div className="space-y-6 mb-12 lg:mb-20">
+            <p className="font-sans text-lg sm:text-xl md:text-3xl uppercase tracking-[0.2em] font-light">hello@jedogroup.com</p>
+            <p className="font-sans text-xs sm:text-sm md:text-lg uppercase tracking-[0.3em] opacity-60">Lagos, Nigeria · London, UK</p>
           </div>
         </Reveal>
         <div className="flex justify-center gap-12">
@@ -578,12 +721,15 @@ const ContactPage = () => (
             </a>
           </Reveal>
           <Reveal delay={0.4}>
-            <a href="#" className="group flex flex-col items-center gap-4">
+            <button 
+              onClick={onContactClick}
+              className="group flex flex-col items-center gap-4 cursor-pointer"
+            >
               <div className="w-20 h-20 border border-white/20 rounded-full flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-500">
                 <Mail size={32} strokeWidth={1} />
               </div>
               <span className="font-sans text-[9px] font-bold uppercase tracking-[0.3em] opacity-40 group-hover:opacity-100 transition-opacity">Email</span>
-            </a>
+            </button>
           </Reveal>
         </div>
       </div>
@@ -591,17 +737,95 @@ const ContactPage = () => (
   </PageTransition>
 );
 
-const AnimatedRoutes = () => {
+const WorkDetailPage = () => {
+  const { slug } = useParams<{ slug: string }>();
+  const work = WORK_ITEMS.find(item => item.id === slug);
+
+  if (!work) return (
+    <PageTransition>
+      <SectionFrame className="justify-center items-center text-center">
+        <h2 className="font-serif text-4xl uppercase mb-8">Work Not Found</h2>
+        <Link to="/work" className="font-sans text-[11px] font-bold uppercase tracking-[0.4em] border-2 border-black px-8 py-4 hover:bg-black hover:text-white transition-all">Back to Work</Link>
+      </SectionFrame>
+    </PageTransition>
+  );
+
+  return (
+    <PageTransition>
+      <SectionFrame className="px-6 md:px-20 py-20 md:py-32">
+        <div className="max-w-6xl mx-auto">
+          <Link to="/work" className="inline-flex items-center gap-2 font-sans text-[10px] font-bold uppercase tracking-[0.3em] mb-12 hover:text-jedo-red transition-colors group">
+            <X size={16} className="rotate-45 group-hover:rotate-0 transition-transform duration-500" /> Back to Work
+          </Link>
+          
+          <Reveal>
+            <h1 className="font-serif text-5xl md:text-8xl lg:text-9xl uppercase font-semibold tracking-tightest mb-12 leading-none">
+              {work.label}
+            </h1>
+          </Reveal>
+          
+          <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 mt-12">
+            <Reveal delay={0.2}>
+              <div className="relative aspect-[1.6/1] bg-black rounded-[4px] flex items-center justify-center overflow-hidden shadow-2xl">
+                {work.customLogo ? (
+                  <span className="text-white font-black text-6xl md:text-8xl tracking-tighter italic">{work.customLogo}</span>
+                ) : (
+                  <work.icon className="text-white w-32 h-32 md:w-48 md:h-48" strokeWidth={0.5} />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
+              </div>
+            </Reveal>
+            
+            <div className="flex flex-col justify-center space-y-12">
+              <Reveal delay={0.3}>
+                <p className="font-sans text-lg md:text-2xl uppercase tracking-widest leading-relaxed opacity-80">
+                  {work.description}
+                </p>
+              </Reveal>
+              
+              <Reveal delay={0.4}>
+                <div className="pt-12 border-t border-black/10">
+                  <span className="font-sans text-[11px] font-bold uppercase tracking-[0.5em] text-jedo-red mb-8 block">Project Specifications</span>
+                  <div className="grid grid-cols-2 gap-12">
+                    <div>
+                      <span className="block font-sans text-[9px] uppercase tracking-[0.3em] opacity-40 mb-2">Timeline</span>
+                      <span className="font-sans text-sm md:text-base font-bold uppercase tracking-wider">Q1 2026</span>
+                    </div>
+                    <div>
+                      <span className="block font-sans text-[9px] uppercase tracking-[0.3em] opacity-40 mb-2">Discipline</span>
+                      <span className="font-sans text-sm md:text-base font-bold uppercase tracking-wider">Digital Design</span>
+                    </div>
+                    <div>
+                      <span className="block font-sans text-[9px] uppercase tracking-[0.3em] opacity-40 mb-2">Client</span>
+                      <span className="font-sans text-sm md:text-base font-bold uppercase tracking-wider">JEDO Global</span>
+                    </div>
+                    <div>
+                      <span className="block font-sans text-[9px] uppercase tracking-[0.3em] opacity-40 mb-2">Status</span>
+                      <span className="font-sans text-sm md:text-base font-bold uppercase tracking-wider text-jedo-red">Completed</span>
+                    </div>
+                  </div>
+                </div>
+              </Reveal>
+            </div>
+          </div>
+        </div>
+      </SectionFrame>
+    </PageTransition>
+  );
+};
+
+const AnimatedRoutes = ({ onContactClick }: { onContactClick: () => void }) => {
   const location = useLocation();
   
   return (
     <AnimatePresence mode="wait">
       {/* @ts-ignore - key is a valid React prop but not explicitly in RoutesProps */}
       <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<HomePage onContactClick={onContactClick} />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/work" element={<WorkPage />} />
-        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/work/:slug" element={<WorkDetailPage />} />
+        <Route path="/contact" element={<ContactPage onContactClick={onContactClick} />} />
         <Route path="/gallery" element={<GalleryPage />} />
       </Routes>
     </AnimatePresence>
@@ -609,6 +833,8 @@ const AnimatedRoutes = () => {
 };
 
 export default function App() {
+  const [isContactOpen, setIsContactOpen] = useState(false);
+
   useEffect(() => {
     const lenis = new Lenis({
       duration: 1.5,
@@ -642,8 +868,9 @@ export default function App() {
       <ScrollToTop />
       <div className="max-w-[1600px] mx-auto bg-white">
         <Navbar />
-        <AnimatedRoutes />
+        <AnimatedRoutes onContactClick={() => setIsContactOpen(true)} />
         <BackToTop />
+        <ContactModal isOpen={isContactOpen} onClose={() => setIsContactOpen(false)} />
       </div>
     </Router>
   );

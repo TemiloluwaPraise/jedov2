@@ -1,5 +1,19 @@
-<svg width="110" height="32" viewBox="0 0 110 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <text x="0" y="24" fill="black" style="font: 700 24px 'Inter', sans-serif; letter-spacing: -0.05em;">JEDO</text>
-  <circle cx="88" cy="16" r="12" stroke="black" stroke-width="4"/>
-  <circle cx="88" cy="16" r="5" fill="black"/>
+<svg width="220" height="70" viewBox="0 0 220 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- J -->
+    <path d="M10 15H50V45C50 56 41 65 30 65C19 65 10 56 10 45V40" />
+    <path d="M20 25H40V45C40 50.5 35.5 55 30 55C24.5 55 20 50.5 20 45" />
+    
+    <!-- E -->
+    <path d="M65 15V65H105M65 40H95M65 15H105" />
+    <path d="M75 25V55H95M75 40H85M75 25H95" />
+
+    <!-- D -->
+    <path d="M120 15V65H145C158.8 65 170 53.8 170 40C170 26.2 158.8 15 145 15H120Z" />
+    <path d="M130 25V55H145C153.3 55 160 48.3 160 40C160 31.7 153.3 25 145 25H130" />
+
+    <!-- O -->
+    <circle cx="200" cy="40" r="25" />
+    <circle cx="200" cy="40" r="15" />
+  </g>
 </svg>
