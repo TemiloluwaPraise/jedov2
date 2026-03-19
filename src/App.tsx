@@ -171,73 +171,55 @@ const Reveal = ({ children, delay = 0, className = "" }: { children: React.React
 );
 
 const WORK_ITEMS = [
-  { id: 'chancellors-cup', icon: Trophy, label: "Chancellors Cup", description: "A prestigious football tournament branding and identity project for the elite collegiate sports landscape." },
-  { id: 'football-posters', icon: Footprints, label: "Football Posters", description: "Dynamic sports poster designs capturing the raw energy and movement of professional football." },
-  { id: 'digital-art', icon: Palette, label: "Digital Art", description: "Exploring the boundaries of digital expression through avant-garde pieces that merge tech and tradition." },
-  { id: 'car-posters', icon: Car, label: "Car Posters", description: "Sleek automotive designs celebrating the intersection of high-performance engineering and visual speed." },
-  { id: 'ballmania', icon: Target, label: "Ballmania", description: "A vibrant sports-themed design series crafted for the modern athlete and digital-first fanbases." },
-  { id: 'logos', customLogo: "LOGOS", label: "Logos", description: "Crafting unique, scalable visual identities for forward-thinking brands across the global market." },
-  { id: 'web-infrastructure', icon: Globe, label: "Web Infrastructure", description: "Building robust, high-performance digital backbones for modern enterprises and creative conglomerates." },
-  { id: 'afb-league', icon: Users, label: "AFB League", description: "Community-driven sports branding and digital ecosystem for local football leagues in Nigeria." },
+  { id: 'chancellors-cup', icon: Trophy, label: "Chancellors Cup", imageUrl: "/chancellors-cup.png", description: "A prestigious football tournament branding and identity project for the elite collegiate sports landscape." },
+  { id: 'football-posters', icon: Footprints, label: "Football Posters", imageUrl: "/football-posters.png", description: "Dynamic sports poster designs capturing the raw energy and movement of professional football." },
+  { id: 'digital-art', icon: Palette, label: "Digital Art", imageUrl: "/digital-art.png", description: "Exploring the boundaries of digital expression through avant-garde pieces that merge tech and tradition." },
+  { id: 'car-posters', icon: Car, label: "Car Posters", imageUrl: "/car-posters.png", description: "Sleek automotive designs celebrating the intersection of high-performance engineering and visual speed." },
+  { id: 'ballmania', icon: Target, label: "Ballmania", imageUrl: "/ballmania.png", description: "A vibrant sports-themed design series crafted for the modern athlete and digital-first fanbases." },
+  { id: 'logos', customLogo: "LOGOS", label: "Logos", imageUrl: "/logos.png", description: "Crafting unique, scalable visual identities for forward-thinking brands across the global market." },
+  { id: 'web-infrastructure', icon: Globe, label: "Web Infrastructure", imageUrl: "/web-infrastructure.png", description: "Building robust, high-performance digital backbones for modern enterprises and creative conglomerates." },
+  { id: 'afb-league', icon: Users, label: "AFB League", imageUrl: "/afb-league.png", description: "Community-driven sports branding and digital ecosystem for local football leagues in Nigeria." },
 ];
 
-const WorkItem = ({ icon: Icon, label, customLogo, imageUrl, index, slug }: { icon?: any, label: string, customLogo?: string, imageUrl?: string, index: number, slug: string }) => (
-  <Link to={`/work/${slug}`} className="block w-full">
-    <motion.div 
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 1.2, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
-      className="flex flex-col items-center group cursor-pointer w-full hover:-translate-y-3 transition-all duration-700"
-      style={{ transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' }}
-    >
-      <div 
-        className="relative w-full aspect-[1.6/1] mt-4 group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all duration-700"
+const WorkItem = ({ label, imageUrl, index, slug }: { label: string, imageUrl: string, index: number, slug: string }) => {
+  const [imgSrc, setImgSrc] = useState(imageUrl);
+  const fallbackImage = `https://picsum.photos/seed/${slug}/800/500`;
+
+  return (
+    <Link to={`/work/${slug}`} className="block w-full">
+      <motion.div 
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 1.2, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+        className="flex flex-col items-center group cursor-pointer w-full hover:-translate-y-3 transition-all duration-700"
         style={{ transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' }}
       >
-        {/* Folder Tab */}
-        <div className="absolute -top-[10px] left-0 w-[42%] h-[11px] bg-black rounded-t-[2px]"></div>
-        {/* Folder Body */}
-        <div className="w-full h-full bg-black rounded-b-[2px] rounded-tr-[2px] flex items-center justify-center overflow-hidden">
-          {imageUrl ? (
-            <motion.img 
-              initial={{ scale: 1.2 }}
-              whileInView={{ scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1.2, ease: "easeOut" }}
-              src={imageUrl} 
-              alt={label} 
-              className="w-full h-full object-cover" 
-              referrerPolicy="no-referrer" 
-            />
-          ) : customLogo ? (
-            <motion.span 
-              initial={{ scale: 0.8, opacity: 0 }}
-              whileInView={{ scale: 1, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.2 + index * 0.1 }}
-              className="text-white font-black text-2xl tracking-tighter italic"
-            >
-              {customLogo}
-            </motion.span>
-          ) : (
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              whileInView={{ scale: 1, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.2 + index * 0.1 }}
-            >
-              <Icon className="text-white w-14 h-14 md:w-20 md:h-20" strokeWidth={0.75} />
-            </motion.div>
-          )}
+        <div 
+          className="relative w-full aspect-[1.6/1] mt-4 group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all duration-700 overflow-hidden rounded-[4px] bg-stone-100"
+          style={{ transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' }}
+        >
+          <motion.img 
+            initial={{ scale: 1.1, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
+            src={imgSrc} 
+            alt={label} 
+            className="w-full h-full object-cover" 
+            referrerPolicy="no-referrer"
+            onError={() => setImgSrc(fallbackImage)}
+          />
+          {/* Subtle Overlay */}
+          <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-700"></div>
         </div>
-      </div>
-      <p className="mt-4 font-sans text-[9px] md:text-[10px] font-bold uppercase tracking-[0.3em] text-center leading-tight">
-        {label}
-      </p>
-    </motion.div>
-  </Link>
-);
+        <p className="mt-4 font-sans text-[9px] md:text-[10px] font-bold uppercase tracking-[0.3em] text-center leading-tight group-hover:text-jedo-red transition-colors duration-500">
+          {label}
+        </p>
+      </motion.div>
+    </Link>
+  );
+};
 
 const BackToTop = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -330,9 +312,8 @@ const HorizontalWork = () => {
           {WORK_ITEMS.map((item, i) => (
             <div key={i} className="w-[400px] lg:w-[500px] flex-shrink-0">
               <WorkItem 
-                icon={item.icon} 
                 label={item.label} 
-                customLogo={item.customLogo} 
+                imageUrl={item.imageUrl} 
                 index={i} 
                 slug={item.id}
               />
@@ -350,9 +331,8 @@ const HorizontalWork = () => {
           {WORK_ITEMS.map((item, i) => (
             <div key={i}>
               <WorkItem 
-                icon={item.icon} 
                 label={item.label} 
-                customLogo={item.customLogo} 
+                imageUrl={item.imageUrl} 
                 index={i} 
                 slug={item.id}
               />
@@ -740,6 +720,8 @@ const ContactPage = ({ onContactClick }: { onContactClick: () => void }) => (
 const WorkDetailPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const work = WORK_ITEMS.find(item => item.id === slug);
+  const [imgSrc, setImgSrc] = useState(work?.imageUrl || '');
+  const fallbackImage = `https://picsum.photos/seed/${slug}-detail/1200/800`;
 
   if (!work) return (
     <PageTransition>
@@ -766,12 +748,17 @@ const WorkDetailPage = () => {
           
           <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 mt-12">
             <Reveal delay={0.2}>
-              <div className="relative aspect-[1.6/1] bg-black rounded-[4px] flex items-center justify-center overflow-hidden shadow-2xl">
-                {work.customLogo ? (
-                  <span className="text-white font-black text-6xl md:text-8xl tracking-tighter italic">{work.customLogo}</span>
-                ) : (
-                  <work.icon className="text-white w-32 h-32 md:w-48 md:h-48" strokeWidth={0.5} />
-                )}
+              <div className="relative aspect-[1.6/1] bg-stone-100 rounded-[4px] flex items-center justify-center overflow-hidden shadow-2xl">
+                <motion.img 
+                  initial={{ scale: 1.1, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 1.2, ease: "easeOut" }}
+                  src={imgSrc} 
+                  alt={work.label} 
+                  className="w-full h-full object-cover" 
+                  referrerPolicy="no-referrer" 
+                  onError={() => setImgSrc(fallbackImage)}
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
               </div>
             </Reveal>
