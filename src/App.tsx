@@ -13,13 +13,15 @@ import { Instagram, Mail, Trophy, Footprints, Palette, Car, Target, Layout, Glob
 
 gsap.registerPlugin(ScrollTrigger);
 
-const Logo = () => (
-  <div className="font-sans font-bold text-2xl tracking-tighter flex items-center leading-none">
-    JEDO
-    <div className="ml-1.5 w-7 h-7 border-[4px] border-black rounded-full flex items-center justify-center">
-      <div className="w-2.5 h-2.5 bg-black rounded-full"></div>
-    </div>
-  </div>
+const Logo = ({ className = "h-8 md:h-10" }: { className?: string }) => (
+  <Link to="/" className="flex items-center">
+    <img 
+      src="/logo.svg" 
+      alt="JEDO Group Logo" 
+      className={className}
+      referrerPolicy="no-referrer"
+    />
+  </Link>
 );
 
 const Navbar = () => {
@@ -247,115 +249,6 @@ const BackToTop = () => {
   );
 };
 
-const CreativePillars = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const leftRef = useRef<HTMLDivElement>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
-
-  const pillars = [
-    {
-      title: "Identity",
-      description: "Crafting unique brand stories that resonate globally. From Lagos to the world, we define the visual DNA of modern African excellence.",
-      image: "https://picsum.photos/seed/jedo-identity/800/1000"
-    },
-    {
-      title: "Digital",
-      description: "Engineering the future of web infrastructure. We build digital ecosystems that are as robust as they are beautiful.",
-      image: "https://picsum.photos/seed/jedo-digital/800/1000"
-    },
-    {
-      title: "Fashion",
-      description: "Where heritage meets haute couture. Our designs are a dialogue between traditional craftsmanship and contemporary silhouettes.",
-      image: "https://picsum.photos/seed/jedo-fashion/800/1000"
-    }
-  ];
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Pinning logic
-      ScrollTrigger.create({
-        trigger: containerRef.current,
-        start: "top top",
-        end: "bottom bottom",
-        pin: leftRef.current,
-        pinSpacing: false,
-      });
-
-      // Content change logic
-      pillars.forEach((_, i) => {
-        ScrollTrigger.create({
-          trigger: `.pillar-text-${i}`,
-          start: "top 50%",
-          end: "bottom 50%",
-          onEnter: () => setActiveIndex(i),
-          onEnterBack: () => setActiveIndex(i),
-        });
-      });
-    }, containerRef);
-
-    return () => ctx.revert();
-  }, []);
-
-  return (
-    <div ref={containerRef} className="relative flex flex-col md:flex-row m-6 md:m-10 border-2 border-black overflow-hidden bg-white">
-      {/* Left Side - Sticky */}
-      <div ref={leftRef} className="hidden md:flex w-1/2 h-screen bg-black items-center justify-center overflow-hidden border-r-2 border-black relative">
-            <motion.img
-              key={activeIndex}
-              initial={{ opacity: 0, scale: 1.15, filter: "blur(10px)" }}
-              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-              exit={{ opacity: 0, scale: 0.95, filter: "blur(10px)" }}
-              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-              src={pillars[activeIndex].image}
-              alt={pillars[activeIndex].title}
-              className="w-full h-full object-cover opacity-80"
-              referrerPolicy="no-referrer"
-            />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
-        <div className="absolute bottom-10 left-10">
-          <motion.span 
-            key={`title-${activeIndex}`}
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="font-serif text-6xl text-white uppercase tracking-tightest font-bold"
-          >
-            0{activeIndex + 1}
-          </motion.span>
-        </div>
-      </div>
-
-      {/* Right Side - Scrolling */}
-      <div className="w-full md:w-1/2 bg-white">
-        {pillars.map((pillar, i) => (
-          <div 
-            key={i} 
-            className={`pillar-text-${i} h-screen flex flex-col justify-center px-10 md:px-20 border-b-2 last:border-b-0 border-black`}
-          >
-            <span className="font-sans text-[11px] font-bold uppercase tracking-[0.4em] text-jedo-red mb-4">
-              Pillar 0{i + 1}
-            </span>
-            <h3 className="font-serif text-5xl md:text-7xl uppercase tracking-tightest leading-tightest mb-8 font-semibold">
-              {pillar.title}
-            </h3>
-            <p className="font-sans text-sm md:text-base uppercase tracking-[0.1em] leading-relaxed opacity-70">
-              {pillar.description}
-            </p>
-            {/* Mobile Image */}
-            <div className="mt-10 md:hidden aspect-square bg-black overflow-hidden rounded-[2px]">
-              <img 
-                src={pillar.image} 
-                alt={pillar.title} 
-                className="w-full h-full object-cover opacity-80" 
-                referrerPolicy="no-referrer"
-              />
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
-
 const HorizontalWork = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLDivElement>(null);
@@ -539,7 +432,7 @@ const HomePage = () => (
     <SectionFrame id="about" className="justify-center items-center px-6 md:px-32 py-20 md:py-32">
       <div className="max-w-6xl text-center">
         <Reveal className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-10 md:mb-16">
-          <Logo />
+          <Logo className="h-6 md:h-8" />
           <span className="font-sans font-bold text-lg md:text-2xl uppercase tracking-[0.25em]">Creative Conglomerate</span>
         </Reveal>
         
@@ -550,9 +443,6 @@ const HomePage = () => (
         </Reveal>
       </div>
     </SectionFrame>
-
-    {/* Sticky Scroll Section */}
-    <CreativePillars />
 
     {/* Horizontal Work Section */}
     <HorizontalWork />
@@ -706,7 +596,8 @@ const AnimatedRoutes = () => {
   
   return (
     <AnimatePresence mode="wait">
-      <Routes location={location} {...({ key: location.pathname } as any)}>
+      {/* @ts-ignore - key is a valid React prop but not explicitly in RoutesProps */}
+      <Routes location={location} key={location.pathname}>
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/work" element={<WorkPage />} />
