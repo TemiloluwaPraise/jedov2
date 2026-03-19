@@ -517,10 +517,10 @@ const HomePage = () => (
         </Reveal>
         <Reveal delay={0.2}>
           <p className="font-sans text-[10px] md:text-[13px] font-bold uppercase tracking-[0.3em] md:tracking-[0.4em] px-4">
-            View More Masterpieces in the <span className="relative group cursor-pointer inline-block">
+            View More Masterpieces in the <Link to="/gallery" className="relative group cursor-pointer inline-block">
               Art Gallery
               <span className="absolute bottom-0 left-0 w-full h-[1px] bg-black scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-            </span>
+            </Link>
           </p>
         </Reveal>
       </div>
