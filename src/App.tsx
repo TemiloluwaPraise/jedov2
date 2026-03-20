@@ -171,19 +171,18 @@ const Reveal = ({ children, delay = 0, className = "" }: { children: React.React
 );
 
 const WORK_ITEMS = [
-  { id: 'chancellors-cup', icon: Trophy, label: "Chancellors Cup", imageUrl: "/chancellors-cup.png", description: "A prestigious football tournament branding and identity project for the elite collegiate sports landscape." },
-  { id: 'football-posters', icon: Footprints, label: "Football Posters", imageUrl: "/football-posters.png", description: "Dynamic sports poster designs capturing the raw energy and movement of professional football." },
-  { id: 'digital-art', icon: Palette, label: "Digital Art", imageUrl: "/digital-art.png", description: "Exploring the boundaries of digital expression through avant-garde pieces that merge tech and tradition." },
-  { id: 'car-posters', icon: Car, label: "Car Posters", imageUrl: "/car-posters.png", description: "Sleek automotive designs celebrating the intersection of high-performance engineering and visual speed." },
-  { id: 'ballmania', icon: Target, label: "Ballmania", imageUrl: "/ballmania.png", description: "A vibrant sports-themed design series crafted for the modern athlete and digital-first fanbases." },
-  { id: 'logos', customLogo: "LOGOS", label: "Logos", imageUrl: "/logos.png", description: "Crafting unique, scalable visual identities for forward-thinking brands across the global market." },
-  { id: 'web-infrastructure', icon: Globe, label: "Web Infrastructure", imageUrl: "/web-infrastructure.png", description: "Building robust, high-performance digital backbones for modern enterprises and creative conglomerates." },
-  { id: 'afb-league', icon: Users, label: "AFB League", imageUrl: "/afb-league.png", description: "Community-driven sports branding and digital ecosystem for local football leagues in Nigeria." },
+  { id: 'chancellors-cup', icon: Trophy, label: "Chancellors Cup", imageUrl: "/assets/chancellors-cup.png", description: "A prestigious football tournament branding and identity project for the elite collegiate sports landscape." },
+  { id: 'football-posters', icon: Footprints, label: "Football Posters", imageUrl: "/assets/football-posters.png", description: "Dynamic sports poster designs capturing the raw energy and movement of professional football." },
+  { id: 'digital-art', icon: Palette, label: "Digital Art", imageUrl: "/assets/digital-art.png", description: "Exploring the boundaries of digital expression through avant-garde pieces that merge tech and tradition." },
+  { id: 'car-posters', icon: Car, label: "Car Posters", imageUrl: "/assets/car-posters.png", description: "Sleek automotive designs celebrating the intersection of high-performance engineering and visual speed." },
+  { id: 'ballmania', icon: Target, label: "Ballmania", imageUrl: "/assets/ballmania.png", description: "A vibrant sports-themed design series crafted for the modern athlete and digital-first fanbases." },
+  { id: 'logos', customLogo: "LOGOS", label: "Logos", imageUrl: "/assets/logos.png", description: "Crafting unique, scalable visual identities for forward-thinking brands across the global market." },
+  { id: 'web-infrastructure', icon: Globe, label: "Web Infrastructure", imageUrl: "/assets/web-infrastructure.png", description: "Building robust, high-performance digital backbones for modern enterprises and creative conglomerates." },
+  { id: 'afb-league', icon: Users, label: "AFB League", imageUrl: "/assets/afb-league.png", description: "Community-driven sports branding and digital ecosystem for local football leagues in Nigeria." },
 ];
 
 const WorkItem = React.memo(({ label, imageUrl, index, slug }: { label: string, imageUrl: string, index: number, slug: string }) => {
-  const [imgSrc, setImgSrc] = useState(imageUrl);
-  const fallbackImage = `https://picsum.photos/seed/${slug}/800/500`;
+  const [imgError, setImgError] = useState(false);
 
   return (
     <Link to={`/work/${slug}`} className="block w-full">
@@ -197,19 +196,25 @@ const WorkItem = React.memo(({ label, imageUrl, index, slug }: { label: string, 
         <div 
           className="relative w-full aspect-[1.6/1] mt-4 group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.2)] transition-shadow duration-500 overflow-hidden rounded-[4px] bg-stone-100"
         >
-          <motion.img 
-            initial={{ scale: 1.05, opacity: 0 }}
-            whileInView={{ scale: 1, opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            src={imgSrc} 
-            alt={label} 
-            loading="lazy"
-            decoding="async"
-            className="w-full h-full object-cover will-change-transform" 
-            referrerPolicy="no-referrer"
-            onError={() => setImgSrc(fallbackImage)}
-          />
+          {imgError ? (
+            <div className="w-full h-full flex items-center justify-center bg-zinc-900 text-zinc-500 text-[8px] font-mono uppercase tracking-widest p-4 text-center">
+              Image Missing: {imageUrl.split('/').pop()}
+            </div>
+          ) : (
+            <motion.img 
+              initial={{ scale: 1.05, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              src={imageUrl} 
+              alt={label} 
+              loading="lazy"
+              decoding="async"
+              className="w-full h-full object-cover will-change-transform" 
+              referrerPolicy="no-referrer"
+              onError={() => setImgError(true)}
+            />
+          )}
           <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-500"></div>
         </div>
         <p className="mt-4 font-sans text-[9px] md:text-[10px] font-bold uppercase tracking-[0.3em] text-center leading-tight group-hover:text-jedo-red transition-colors duration-300">
@@ -628,47 +633,58 @@ const AboutPage = () => (
   </PageTransition>
 );
 
-const GalleryPage = () => (
-  <PageTransition>
-    <SectionFrame id="gallery-page" className="px-6 md:px-10 lg:px-20 py-20 md:py-32">
-      <Reveal className="mb-12 lg:mb-20">
-        <h2 className="font-serif text-5xl sm:text-7xl md:text-8xl lg:text-9xl uppercase font-semibold tracking-tightest">Art Gallery</h2>
-        <p className="font-sans text-[11px] font-bold uppercase tracking-[0.4em] mt-4 opacity-60">Curated Masterpieces from Madeira</p>
-      </Reveal>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-10">
-        {[1, 2, 3, 4, 5, 6].map((i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ delay: i * 0.05, duration: 0.8 }}
-            className="aspect-[3/4] bg-black relative overflow-hidden group cursor-crosshair will-change-[transform,opacity]"
-          >
-            <img 
-              src={`https://picsum.photos/seed/gallery-${i}/800/1200`} 
-              alt={`Gallery Item ${i}`}
-              loading="lazy"
-              decoding="async"
-              className="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000 will-change-transform"
-              style={{ transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' }}
-              referrerPolicy="no-referrer"
-            />
-            <div 
-              className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-all duration-700 flex items-center justify-center"
-              style={{ transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' }}
+const GalleryPage = () => {
+  const galleryImages = [
+    '/assets/chancellors-cup.png',
+    '/assets/football-posters.png',
+    '/assets/digital-art.png',
+    '/assets/car-posters.png',
+    '/assets/ballmania.png',
+    '/assets/logos.png'
+  ];
+
+  return (
+    <PageTransition>
+      <SectionFrame id="gallery-page" className="px-6 md:px-10 lg:px-20 py-20 md:py-32">
+        <Reveal className="mb-12 lg:mb-20">
+          <h2 className="font-serif text-5xl sm:text-7xl md:text-8xl lg:text-9xl uppercase font-semibold tracking-tightest">Art Gallery</h2>
+          <p className="font-sans text-[11px] font-bold uppercase tracking-[0.4em] mt-4 opacity-60">Curated Masterpieces from Madeira</p>
+        </Reveal>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-10">
+          {galleryImages.map((src, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ delay: i * 0.05, duration: 0.8 }}
+              className="aspect-[3/4] bg-black relative overflow-hidden group cursor-crosshair will-change-[transform,opacity]"
             >
-              <span 
-                className="text-white font-sans text-[10px] font-bold uppercase tracking-[0.3em] border border-white/30 px-4 py-2 translate-y-4 group-hover:translate-y-0 transition-all duration-700"
+              <img 
+                src={src} 
+                alt={`Gallery Item ${i}`}
+                loading="lazy"
+                decoding="async"
+                className="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000 will-change-transform"
                 style={{ transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' }}
-              >View Piece</span>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-    </SectionFrame>
-  </PageTransition>
-);
+                referrerPolicy="no-referrer"
+              />
+              <div 
+                className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-all duration-700 flex items-center justify-center"
+                style={{ transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' }}
+              >
+                <span 
+                  className="text-white font-sans text-[10px] font-bold uppercase tracking-[0.3em] border border-white/30 px-4 py-2 translate-y-4 group-hover:translate-y-0 transition-all duration-700"
+                  style={{ transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' }}
+                >View Piece</span>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </SectionFrame>
+    </PageTransition>
+  );
+};
 
 const WorkPage = () => (
   <PageTransition>
@@ -721,8 +737,7 @@ const ContactPage = ({ onContactClick }: { onContactClick: () => void }) => (
 const WorkDetailPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const work = WORK_ITEMS.find(item => item.id === slug);
-  const [imgSrc, setImgSrc] = useState(work?.imageUrl || '');
-  const fallbackImage = `https://picsum.photos/seed/${slug}-detail/1200/800`;
+  const [imgError, setImgError] = useState(false);
 
   if (!work) return (
     <PageTransition>
@@ -750,17 +765,23 @@ const WorkDetailPage = () => {
           <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 mt-12">
             <Reveal delay={0.2}>
               <div className="relative aspect-[1.6/1] bg-stone-100 rounded-[4px] flex items-center justify-center overflow-hidden shadow-2xl">
-                <motion.img 
-                  initial={{ scale: 1.05, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ duration: 0.8, ease: "easeOut" }}
-                  src={imgSrc} 
-                  alt={work.label} 
-                  decoding="async"
-                  className="w-full h-full object-cover will-change-[transform,opacity]" 
-                  referrerPolicy="no-referrer" 
-                  onError={() => setImgSrc(fallbackImage)}
-                />
+                {imgError ? (
+                  <div className="w-full h-full flex items-center justify-center bg-zinc-900 text-zinc-500 text-sm font-mono uppercase tracking-widest p-8 text-center">
+                    Image Missing: {work.imageUrl.split('/').pop()}
+                  </div>
+                ) : (
+                  <motion.img 
+                    initial={{ scale: 1.05, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
+                    src={work.imageUrl} 
+                    alt={work.label} 
+                    decoding="async"
+                    className="w-full h-full object-cover will-change-[transform,opacity]" 
+                    referrerPolicy="no-referrer" 
+                    onError={() => setImgError(true)}
+                  />
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
               </div>
             </Reveal>
