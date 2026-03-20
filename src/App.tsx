@@ -172,14 +172,14 @@ const Reveal = ({ children, delay = 0, className = "" }: { children: React.React
 );
 
 const WORK_ITEMS = [
-  { id: 'chancellors-cup', icon: Trophy, label: "Chancellors Cup", src: "/assets/chancellors-cup.png", description: "A prestigious football tournament branding and identity project for the elite collegiate sports landscape." },
-  { id: 'football-posters', icon: Footprints, label: "Football Posters", src: "/assets/football-posters.png", description: "Dynamic sports poster designs capturing the raw energy and movement of professional football." },
-  { id: 'digital-art', icon: Palette, label: "Digital Art", src: "/assets/digital-art.png", description: "Exploring the boundaries of digital expression through avant-garde pieces that merge tech and tradition." },
-  { id: 'car-posters', icon: Car, label: "Car Posters", src: "/assets/car-posters.png", description: "Sleek automotive designs celebrating the intersection of high-performance engineering and visual speed." },
-  { id: 'ballmania', icon: Target, label: "Ballmania", src: "/assets/ballmania.png", description: "A vibrant sports-themed design series crafted for the modern athlete and digital-first fanbases." },
-  { id: 'logos', customLogo: "LOGOS", label: "Logos", src: "/assets/logos.png", description: "Crafting unique, scalable visual identities for forward-thinking brands across the global market." },
-  { id: 'web-infrastructure', icon: Globe, label: "Web Infrastructure", src: "/assets/web-infrastructure.png", description: "Building robust, high-performance digital backbones for modern enterprises and creative conglomerates." },
-  { id: 'afb-league', icon: Users, label: "AFB League", src: "/assets/afb-league.png", description: "Community-driven sports branding and digital ecosystem for local football leagues in Nigeria." },
+  { id: 'chancellors-cup', icon: Trophy, label: "Chancellors Cup", src: "/images/chancellors-cup.png", description: "A prestigious football tournament branding and identity project for the elite collegiate sports landscape." },
+  { id: 'football-posters', icon: Footprints, label: "Football Posters", src: "/images/football-posters.png", description: "Dynamic sports poster designs capturing the raw energy and movement of professional football." },
+  { id: 'digital-art', icon: Palette, label: "Digital Art", src: "/images/digital-art.png", description: "Exploring the boundaries of digital expression through avant-garde pieces that merge tech and tradition." },
+  { id: 'car-posters', icon: Car, label: "Car Posters", src: "/images/car-posters.png", description: "Sleek automotive designs celebrating the intersection of high-performance engineering and visual speed." },
+  { id: 'ballmania', icon: Target, label: "Ballmania", src: "/images/ballmania.png", description: "A vibrant sports-themed design series crafted for the modern athlete and digital-first fanbases." },
+  { id: 'logos', customLogo: "LOGOS", label: "Logos", src: "/images/logos.png", description: "Crafting unique, scalable visual identities for forward-thinking brands across the global market." },
+  { id: 'web-infrastructure', icon: Globe, label: "Web Infrastructure", src: "/images/web-infrastructure.png", description: "Building robust, high-performance digital backbones for modern enterprises and creative conglomerates." },
+  { id: 'afb-league', icon: Users, label: "AFB League", src: "/images/afb-league.png", description: "Community-driven sports branding and digital ecosystem for local football leagues in Nigeria." },
 ];
 
 const WorkItem = React.memo(({ label, src, index, slug }: { label: string, src: string, index: number, slug: string }) => {
@@ -636,12 +636,12 @@ const AboutPage = () => (
 
 const GalleryPage = () => {
   const galleryImages = [
-    '/assets/chancellors-cup.png',
-    '/assets/football-posters.png',
-    '/assets/digital-art.png',
-    '/assets/car-posters.png',
-    '/assets/ballmania.png',
-    '/assets/logos.png'
+    '/images/chancellors-cup.png',
+    '/images/football-posters.png',
+    '/images/digital-art.png',
+    '/images/car-posters.png',
+    '/images/ballmania.png',
+    '/images/logos.png'
   ];
 
   return (
