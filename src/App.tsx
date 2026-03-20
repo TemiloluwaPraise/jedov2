@@ -10,6 +10,7 @@ import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Instagram, Mail, Trophy, Footprints, Palette, Car, Target, Layout, Globe, Users, ChevronUp, Menu, X } from 'lucide-react';
+import { Analytics } from '@vercel/analytics/react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -171,17 +172,17 @@ const Reveal = ({ children, delay = 0, className = "" }: { children: React.React
 );
 
 const WORK_ITEMS = [
-  { id: 'chancellors-cup', icon: Trophy, label: "Chancellors Cup", imageUrl: "/assets/chancellors-cup.png", description: "A prestigious football tournament branding and identity project for the elite collegiate sports landscape." },
-  { id: 'football-posters', icon: Footprints, label: "Football Posters", imageUrl: "/assets/football-posters.png", description: "Dynamic sports poster designs capturing the raw energy and movement of professional football." },
-  { id: 'digital-art', icon: Palette, label: "Digital Art", imageUrl: "/assets/digital-art.png", description: "Exploring the boundaries of digital expression through avant-garde pieces that merge tech and tradition." },
-  { id: 'car-posters', icon: Car, label: "Car Posters", imageUrl: "/assets/car-posters.png", description: "Sleek automotive designs celebrating the intersection of high-performance engineering and visual speed." },
-  { id: 'ballmania', icon: Target, label: "Ballmania", imageUrl: "/assets/ballmania.png", description: "A vibrant sports-themed design series crafted for the modern athlete and digital-first fanbases." },
-  { id: 'logos', customLogo: "LOGOS", label: "Logos", imageUrl: "/assets/logos.png", description: "Crafting unique, scalable visual identities for forward-thinking brands across the global market." },
-  { id: 'web-infrastructure', icon: Globe, label: "Web Infrastructure", imageUrl: "/assets/web-infrastructure.png", description: "Building robust, high-performance digital backbones for modern enterprises and creative conglomerates." },
-  { id: 'afb-league', icon: Users, label: "AFB League", imageUrl: "/assets/afb-league.png", description: "Community-driven sports branding and digital ecosystem for local football leagues in Nigeria." },
+  { id: 'chancellors-cup', icon: Trophy, label: "Chancellors Cup", src: "/assets/chancellors-cup.png", description: "A prestigious football tournament branding and identity project for the elite collegiate sports landscape." },
+  { id: 'football-posters', icon: Footprints, label: "Football Posters", src: "/assets/football-posters.png", description: "Dynamic sports poster designs capturing the raw energy and movement of professional football." },
+  { id: 'digital-art', icon: Palette, label: "Digital Art", src: "/assets/digital-art.png", description: "Exploring the boundaries of digital expression through avant-garde pieces that merge tech and tradition." },
+  { id: 'car-posters', icon: Car, label: "Car Posters", src: "/assets/car-posters.png", description: "Sleek automotive designs celebrating the intersection of high-performance engineering and visual speed." },
+  { id: 'ballmania', icon: Target, label: "Ballmania", src: "/assets/ballmania.png", description: "A vibrant sports-themed design series crafted for the modern athlete and digital-first fanbases." },
+  { id: 'logos', customLogo: "LOGOS", label: "Logos", src: "/assets/logos.png", description: "Crafting unique, scalable visual identities for forward-thinking brands across the global market." },
+  { id: 'web-infrastructure', icon: Globe, label: "Web Infrastructure", src: "/assets/web-infrastructure.png", description: "Building robust, high-performance digital backbones for modern enterprises and creative conglomerates." },
+  { id: 'afb-league', icon: Users, label: "AFB League", src: "/assets/afb-league.png", description: "Community-driven sports branding and digital ecosystem for local football leagues in Nigeria." },
 ];
 
-const WorkItem = React.memo(({ label, imageUrl, index, slug }: { label: string, imageUrl: string, index: number, slug: string }) => {
+const WorkItem = React.memo(({ label, src, index, slug }: { label: string, src: string, index: number, slug: string }) => {
   const [imgError, setImgError] = useState(false);
 
   return (
@@ -198,7 +199,7 @@ const WorkItem = React.memo(({ label, imageUrl, index, slug }: { label: string, 
         >
           {imgError ? (
             <div className="w-full h-full flex items-center justify-center bg-zinc-900 text-zinc-500 text-[8px] font-mono uppercase tracking-widest p-4 text-center">
-              Image Missing: {imageUrl.split('/').pop()}
+              Image Missing: {src.split('/').pop()}
             </div>
           ) : (
             <motion.img 
@@ -206,7 +207,7 @@ const WorkItem = React.memo(({ label, imageUrl, index, slug }: { label: string, 
               whileInView={{ scale: 1, opacity: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, ease: "easeOut" }}
-              src={imageUrl} 
+              src={src} 
               alt={label} 
               loading="lazy"
               decoding="async"
@@ -317,7 +318,7 @@ const HorizontalWork = () => {
             <div key={i} className="w-[400px] lg:w-[500px] flex-shrink-0">
               <WorkItem 
                 label={item.label} 
-                imageUrl={item.imageUrl} 
+                src={item.src} 
                 index={i} 
                 slug={item.id}
               />
@@ -336,7 +337,7 @@ const HorizontalWork = () => {
             <div key={i}>
               <WorkItem 
                 label={item.label} 
-                imageUrl={item.imageUrl} 
+                src={item.src} 
                 index={i} 
                 slug={item.id}
               />
@@ -767,14 +768,14 @@ const WorkDetailPage = () => {
               <div className="relative aspect-[1.6/1] bg-stone-100 rounded-[4px] flex items-center justify-center overflow-hidden shadow-2xl">
                 {imgError ? (
                   <div className="w-full h-full flex items-center justify-center bg-zinc-900 text-zinc-500 text-sm font-mono uppercase tracking-widest p-8 text-center">
-                    Image Missing: {work.imageUrl.split('/').pop()}
+                    Image Missing: {work.src.split('/').pop()}
                   </div>
                 ) : (
                   <motion.img 
                     initial={{ scale: 1.05, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 0.8, ease: "easeOut" }}
-                    src={work.imageUrl} 
+                    src={work.src} 
                     alt={work.label} 
                     decoding="async"
                     className="w-full h-full object-cover will-change-[transform,opacity]" 
@@ -881,6 +882,7 @@ export default function App() {
         <AnimatedRoutes onContactClick={() => setIsContactOpen(true)} />
         <BackToTop />
         <ContactModal isOpen={isContactOpen} onClose={() => setIsContactOpen(false)} />
+        <Analytics />
       </div>
     </Router>
   );
