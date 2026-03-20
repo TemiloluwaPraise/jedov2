@@ -9,7 +9,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation, Link, NavLink, use
 import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Instagram, Mail, Trophy, Footprints, Palette, Car, Target, Layout, Globe, Users, ChevronUp, Menu, X } from 'lucide-react';
+import { Instagram, Mail, Trophy, Footprints, Palette, Car, Target, Layout, Globe, Users, ChevronUp, Menu, X, ImageOff } from 'lucide-react';
 import { Analytics } from '@vercel/analytics/react';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -142,6 +142,8 @@ const Navbar = () => {
   );
 };
 
+const PUBLIC_PATH = (import.meta as any).env.BASE_URL;
+
 const SectionFrame = ({ children, className = "", id }: { children: React.ReactNode, className?: string, id?: string }) => (
   <motion.div 
     id={id} 
@@ -154,6 +156,57 @@ const SectionFrame = ({ children, className = "", id }: { children: React.ReactN
     {children}
   </motion.div>
 );
+
+const ImageWithFallback = ({ 
+  src, 
+  alt, 
+  className = "", 
+  containerClassName = "",
+  fallbackTextSize = "text-[8px]",
+  ...props 
+}: { 
+  src: string, 
+  alt: string, 
+  className?: string, 
+  containerClassName?: string,
+  fallbackTextSize?: string,
+  [key: string]: any 
+}) => {
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const fileName = src.split('/').pop();
+
+  if (error) {
+    return (
+      <div className={`w-full h-full flex items-center justify-center bg-zinc-900 text-zinc-500 font-mono uppercase tracking-widest p-4 text-center ${fallbackTextSize} ${containerClassName}`}>
+        <div className="flex flex-col items-center gap-2">
+          <ImageOff size={fallbackTextSize.includes('sm') ? 24 : 16} strokeWidth={1} className="opacity-40" />
+          <span>Image Missing: {fileName}</span>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={`relative w-full h-full overflow-hidden ${containerClassName}`}>
+      {loading && (
+        <div className="absolute inset-0 bg-stone-200 animate-pulse flex items-center justify-center z-10">
+           <span className="font-sans text-[8px] uppercase tracking-widest opacity-30">Loading...</span>
+        </div>
+      )}
+      <motion.img
+        src={src}
+        alt={alt}
+        className={`${className} ${loading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
+        onLoad={() => setLoading(false)}
+        onError={() => setError(true)}
+        referrerPolicy="no-referrer"
+        {...props}
+      />
+    </div>
+  );
+};
 
 const Reveal = ({ children, delay = 0, className = "" }: { children: React.ReactNode, delay?: number, className?: string }) => (
   <motion.div
@@ -172,19 +225,17 @@ const Reveal = ({ children, delay = 0, className = "" }: { children: React.React
 );
 
 const WORK_ITEMS = [
-  { id: 'chancellors-cup', icon: Trophy, label: "Chancellors Cup", src: "/assets/chancellors-cup.png", description: "A prestigious football tournament branding and identity project for the elite collegiate sports landscape." },
-  { id: 'football-posters', icon: Footprints, label: "Football Posters", src: "/assets/football-posters.png", description: "Dynamic sports poster designs capturing the raw energy and movement of professional football." },
-  { id: 'digital-art', icon: Palette, label: "Digital Art", src: "/assets/digital-art.png", description: "Exploring the boundaries of digital expression through avant-garde pieces that merge tech and tradition." },
-  { id: 'car-posters', icon: Car, label: "Car Posters", src: "/assets/car-posters.png", description: "Sleek automotive designs celebrating the intersection of high-performance engineering and visual speed." },
-  { id: 'ballmania', icon: Target, label: "Ballmania", src: "/assets/ballmania.png", description: "A vibrant sports-themed design series crafted for the modern athlete and digital-first fanbases." },
-  { id: 'logos', customLogo: "LOGOS", label: "Logos", src: "/assets/logos.png", description: "Crafting unique, scalable visual identities for forward-thinking brands across the global market." },
-  { id: 'web-infrastructure', icon: Globe, label: "Web Infrastructure", src: "/assets/web-infrastructure.png", description: "Building robust, high-performance digital backbones for modern enterprises and creative conglomerates." },
-  { id: 'afb-league', icon: Users, label: "AFB League", src: "/assets/afb-league.png", description: "Community-driven sports branding and digital ecosystem for local football leagues in Nigeria." },
+  { id: 'chancellors-cup', icon: Trophy, label: "Chancellors Cup", src: `${PUBLIC_PATH}assets/chancellors-cup.png`, description: "A prestigious football tournament branding and identity project for the elite collegiate sports landscape." },
+  { id: 'football-posters', icon: Footprints, label: "Football Posters", src: `${PUBLIC_PATH}assets/football-posters.png`, description: "Dynamic sports poster designs capturing the raw energy and movement of professional football." },
+  { id: 'digital-art', icon: Palette, label: "Digital Art", src: `${PUBLIC_PATH}assets/digital-art.png`, description: "Exploring the boundaries of digital expression through avant-garde pieces that merge tech and tradition." },
+  { id: 'car-posters', icon: Car, label: "Car Posters", src: `${PUBLIC_PATH}assets/car-posters.png`, description: "Sleek automotive designs celebrating the intersection of high-performance engineering and visual speed." },
+  { id: 'ballmania', icon: Target, label: "Ballmania", src: `${PUBLIC_PATH}assets/ballmania.png`, description: "A vibrant sports-themed design series crafted for the modern athlete and digital-first fanbases." },
+  { id: 'logos', customLogo: "LOGOS", label: "Logos", src: `${PUBLIC_PATH}assets/logos.png`, description: "Crafting unique, scalable visual identities for forward-thinking brands across the global market." },
+  { id: 'web-infrastructure', icon: Globe, label: "Web Infrastructure", src: `${PUBLIC_PATH}assets/web-infrastructure.png`, description: "Building robust, high-performance digital backbones for modern enterprises and creative conglomerates." },
+  { id: 'afb-league', icon: Users, label: "AFB League", src: `${PUBLIC_PATH}assets/afb-league.png`, description: "Community-driven sports branding and digital ecosystem for local football leagues in Nigeria." },
 ];
 
 const WorkItem = React.memo(({ label, src, index, slug }: { label: string, src: string, index: number, slug: string }) => {
-  const [imgError, setImgError] = useState(false);
-
   return (
     <Link to={`/work/${slug}`} className="block w-full">
       <motion.div 
@@ -197,25 +248,17 @@ const WorkItem = React.memo(({ label, src, index, slug }: { label: string, src: 
         <div 
           className="relative w-full aspect-[1.6/1] mt-4 group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.2)] transition-shadow duration-500 overflow-hidden rounded-[4px] bg-stone-100"
         >
-          {imgError ? (
-            <div className="w-full h-full flex items-center justify-center bg-zinc-900 text-zinc-500 text-[8px] font-mono uppercase tracking-widest p-4 text-center">
-              Image Missing: {src.split('/').pop()}
-            </div>
-          ) : (
-            <motion.img 
-              initial={{ scale: 1.05, opacity: 0 }}
-              whileInView={{ scale: 1, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-              src={src} 
-              alt={label} 
-              loading="lazy"
-              decoding="async"
-              className="w-full h-full object-cover will-change-transform" 
-              referrerPolicy="no-referrer"
-              onError={() => setImgError(true)}
-            />
-          )}
+          <ImageWithFallback 
+            src={src} 
+            alt={label} 
+            loading="lazy"
+            decoding="async"
+            className="w-full h-full object-cover will-change-transform"
+            initial={{ scale: 1.05, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          />
           <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-500"></div>
         </div>
         <p className="mt-4 font-sans text-[9px] md:text-[10px] font-bold uppercase tracking-[0.3em] text-center leading-tight group-hover:text-jedo-red transition-colors duration-300">
@@ -636,12 +679,12 @@ const AboutPage = () => (
 
 const GalleryPage = () => {
   const galleryImages = [
-    '/assets/chancellors-cup.png',
-    '/assets/football-posters.png',
-    '/assets/digital-art.png',
-    '/assets/car-posters.png',
-    '/assets/ballmania.png',
-    '/assets/logos.png'
+    `${PUBLIC_PATH}assets/chancellors-cup.png`,
+    `${PUBLIC_PATH}assets/football-posters.png`,
+    `${PUBLIC_PATH}assets/digital-art.png`,
+    `${PUBLIC_PATH}assets/car-posters.png`,
+    `${PUBLIC_PATH}assets/ballmania.png`,
+    `${PUBLIC_PATH}assets/logos.png`
   ];
 
   return (
@@ -661,14 +704,13 @@ const GalleryPage = () => {
               transition={{ delay: i * 0.05, duration: 0.8 }}
               className="aspect-[3/4] bg-black relative overflow-hidden group cursor-crosshair will-change-[transform,opacity]"
             >
-              <img 
+              <ImageWithFallback 
                 src={src} 
                 alt={`Gallery Item ${i}`}
                 loading="lazy"
                 decoding="async"
                 className="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000 will-change-transform"
                 style={{ transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' }}
-                referrerPolicy="no-referrer"
               />
               <div 
                 className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-all duration-700 flex items-center justify-center"
@@ -738,7 +780,6 @@ const ContactPage = ({ onContactClick }: { onContactClick: () => void }) => (
 const WorkDetailPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const work = WORK_ITEMS.find(item => item.id === slug);
-  const [imgError, setImgError] = useState(false);
 
   if (!work) return (
     <PageTransition>
@@ -766,23 +807,16 @@ const WorkDetailPage = () => {
           <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 mt-12">
             <Reveal delay={0.2}>
               <div className="relative aspect-[1.6/1] bg-stone-100 rounded-[4px] flex items-center justify-center overflow-hidden shadow-2xl">
-                {imgError ? (
-                  <div className="w-full h-full flex items-center justify-center bg-zinc-900 text-zinc-500 text-sm font-mono uppercase tracking-widest p-8 text-center">
-                    Image Missing: {work.src.split('/').pop()}
-                  </div>
-                ) : (
-                  <motion.img 
-                    initial={{ scale: 1.05, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ duration: 0.8, ease: "easeOut" }}
-                    src={work.src} 
-                    alt={work.label} 
-                    decoding="async"
-                    className="w-full h-full object-cover will-change-[transform,opacity]" 
-                    referrerPolicy="no-referrer" 
-                    onError={() => setImgError(true)}
-                  />
-                )}
+                <ImageWithFallback 
+                  src={work.src} 
+                  alt={work.label} 
+                  decoding="async"
+                  fallbackTextSize="text-sm"
+                  className="w-full h-full object-cover will-change-[transform,opacity]"
+                  initial={{ scale: 1.05, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.8, ease: "easeOut" }}
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
               </div>
             </Reveal>
