@@ -207,7 +207,7 @@ const WorkItem = React.memo(({ label, src, index, slug }: { label: string, src: 
               whileInView={{ scale: 1, opacity: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, ease: "easeOut" }}
-              src={src} 
+              src={`/api/image?src=${src}&width=800&quality=80`} 
               alt={label} 
               loading="lazy"
               decoding="async"
@@ -662,7 +662,7 @@ const GalleryPage = () => {
               className="aspect-[3/4] bg-black relative overflow-hidden group cursor-crosshair will-change-[transform,opacity]"
             >
               <img 
-                src={src} 
+                src={`/api/image?src=${src}&width=600&quality=75`} 
                 alt={`Gallery Item ${i}`}
                 loading="lazy"
                 decoding="async"
@@ -775,7 +775,7 @@ const WorkDetailPage = () => {
                     initial={{ scale: 1.05, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 0.8, ease: "easeOut" }}
-                    src={work.src} 
+                    src={`/api/image?src=${work.src}&width=1200&quality=85`} 
                     alt={work.label} 
                     decoding="async"
                     className="w-full h-full object-cover will-change-[transform,opacity]" 
