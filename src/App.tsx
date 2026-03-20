@@ -544,6 +544,20 @@ const HomePage = ({ onContactClick }: { onContactClick: () => void }) => (
   <PageTransition>
     {/* Hero Section */}
     <SectionFrame id="home" className="relative justify-center items-center text-center px-6 py-20 overflow-hidden">
+      {/* Background Image Accent */}
+      <motion.div 
+        initial={{ opacity: 0, scale: 1.1 }}
+        animate={{ opacity: 0.15, scale: 1 }}
+        transition={{ duration: 2, ease: "easeOut" }}
+        className="absolute inset-0 z-0"
+      >
+        <ImageWithFallback 
+          src={`${PUBLIC_PATH}assets/digital-art.png`} 
+          alt="Digital Art Background" 
+          className="w-full h-full object-cover grayscale opacity-30"
+        />
+      </motion.div>
+
       {/* Animated Background Gradient */}
       <motion.div 
         animate={{ 
