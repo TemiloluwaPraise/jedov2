@@ -50,6 +50,7 @@ const Navbar = () => {
     { name: 'Home', href: '/' },
     { name: 'About Us', href: '/about' },
     { name: 'Work', href: '/work' },
+    { name: 'Shop', href: '/shop' },
     { name: 'Contact Us', href: '/contact' },
   ];
 
@@ -873,6 +874,35 @@ const WorkDetailPage = () => {
   );
 };
 
+const ShopPage = () => {
+  return (
+    <PageTransition>
+      <SectionFrame className="min-h-[80vh] flex flex-col items-center justify-center text-center">
+        <Reveal>
+          <h1 className="font-serif text-6xl md:text-8xl lg:text-9xl uppercase tracking-tightest leading-tightest mb-10">
+            Shop
+          </h1>
+        </Reveal>
+        <Reveal delay={0.2}>
+          <p className="font-sans text-lg md:text-xl text-black/60 max-w-2xl mx-auto uppercase tracking-widest">
+            Our exclusive collection is coming soon. Stay tuned for the official launch of JEDO Shop.
+          </p>
+        </Reveal>
+        <Reveal delay={0.4}>
+          <div className="mt-16">
+            <Link 
+              to="/contact" 
+              className="inline-block px-10 py-5 bg-black text-white font-sans text-xs font-bold uppercase tracking-[0.3em] hover:bg-jedo-red transition-colors duration-500"
+            >
+              Get Notified
+            </Link>
+          </div>
+        </Reveal>
+      </SectionFrame>
+    </PageTransition>
+  );
+};
+
 const AnimatedRoutes = ({ onContactClick }: { onContactClick: () => void }) => {
   const location = useLocation();
   
@@ -885,6 +915,7 @@ const AnimatedRoutes = ({ onContactClick }: { onContactClick: () => void }) => {
         <Route path="/work" element={<WorkPage />} />
         <Route path="/work/:slug" element={<WorkDetailPage />} />
         <Route path="/contact" element={<ContactPage onContactClick={onContactClick} />} />
+        <Route path="/shop" element={<ShopPage />} />
         <Route path="/gallery" element={<GalleryPage />} />
       </Routes>
     </AnimatePresence>
