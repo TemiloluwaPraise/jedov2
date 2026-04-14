@@ -16,30 +16,12 @@ gsap.registerPlugin(ScrollTrigger);
 
 const Logo = ({ className = "h-8 md:h-10" }: { className?: string }) => (
   <Link to="/" className="flex items-center group">
-    <svg 
-      className={`${className} w-auto h-full transition-transform duration-500 group-hover:scale-105`}
-      viewBox="0 0 220 70" 
-      fill="none" 
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <g stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
-        {/* J */}
-        <path d="M10 15H50V45C50 56 41 65 30 65C19 65 10 56 10 45V40" />
-        <path d="M20 25H40V45C40 50.5 35.5 55 30 55C24.5 55 20 50.5 20 45" />
-        
-        {/* E */}
-        <path d="M65 15V65H105M65 40H95M65 15H105" />
-        <path d="M75 25V55H95M75 40H85M75 25H95" />
-
-        {/* D */}
-        <path d="M120 15V65H145C158.8 65 170 53.8 170 40C170 26.2 158.8 15 145 15H120Z" />
-        <path d="M130 25V55H145C153.3 55 160 48.3 160 40C160 31.7 153.3 25 145 25H130" />
-
-        {/* O */}
-        <circle cx="200" cy="40" r="25" />
-        <circle cx="200" cy="40" r="15" />
-      </g>
-    </svg>
+    <img 
+      src="/assets/logo.png" 
+      alt="JEDO Group Logo" 
+      className={`${className} w-auto transition-transform duration-500 group-hover:scale-105`}
+      referrerPolicy="no-referrer"
+    />
   </Link>
 );
 
@@ -875,29 +857,124 @@ const WorkDetailPage = () => {
 };
 
 const ShopPage = () => {
+  const upcomingDrops = [
+    {
+      id: 1,
+      name: "Signature Logo Tee",
+      category: "Apparel",
+      price: "Coming Soon",
+      image: "https://picsum.photos/seed/jedo-tee-1/800/1000",
+      description: "Heavyweight 300gsm cotton."
+    },
+    {
+      id: 2,
+      name: "Heritage Trucker",
+      category: "Accessories",
+      price: "Coming Soon",
+      image: "https://picsum.photos/seed/jedo-cap-1/800/1000",
+      description: "Premium mesh and suede."
+    },
+    {
+      id: 3,
+      name: "Global Identity Parka",
+      category: "Outerwear",
+      price: "Coming Soon",
+      image: "https://picsum.photos/seed/jedo-parka/800/1000",
+      description: "Water-resistant tech fabric."
+    },
+    {
+      id: 4,
+      name: "Modern Utility Tote",
+      category: "Accessories",
+      price: "Coming Soon",
+      image: "https://picsum.photos/seed/jedo-tote-1/800/1000",
+      description: "Reinforced canvas construction."
+    }
+  ];
+
   return (
     <PageTransition>
-      <SectionFrame className="min-h-[80vh] flex flex-col items-center justify-center text-center">
-        <Reveal>
-          <h1 className="font-serif text-6xl md:text-8xl lg:text-9xl uppercase tracking-tightest leading-tightest mb-10">
-            Shop
-          </h1>
-        </Reveal>
-        <Reveal delay={0.2}>
-          <p className="font-sans text-lg md:text-xl text-black/60 max-w-2xl mx-auto uppercase tracking-widest">
-            Our exclusive collection is coming soon. Stay tuned for the official launch of JEDO Shop.
-          </p>
-        </Reveal>
-        <Reveal delay={0.4}>
-          <div className="mt-16">
-            <Link 
-              to="/contact" 
-              className="inline-block px-10 py-5 bg-black text-white font-sans text-xs font-bold uppercase tracking-[0.3em] hover:bg-jedo-red transition-colors duration-500"
-            >
-              Get Notified
-            </Link>
-          </div>
-        </Reveal>
+      {/* Minimal Hero */}
+      <SectionFrame className="pt-32 pb-20">
+        <div className="max-w-4xl">
+          <Reveal>
+            <span className="block font-sans text-[10px] uppercase tracking-[0.6em] text-jedo-red mb-8 font-bold">The Marketplace</span>
+            <h1 className="font-serif text-6xl md:text-8xl lg:text-9xl uppercase tracking-tightest leading-none mb-10">
+              Curated<br/>Essentials
+            </h1>
+            <p className="font-sans text-xs md:text-sm text-black/50 uppercase tracking-[0.3em] leading-relaxed max-w-md">
+              Limited edition drops from the JEDO design house. 
+              Quality craftsmanship meets contemporary identity.
+            </p>
+          </Reveal>
+        </div>
+      </SectionFrame>
+
+      {/* Elegant 2x2 Grid */}
+      <SectionFrame className="py-20 border-t border-black/5">
+        <div className="flex justify-between items-end mb-16">
+          <Reveal>
+            <h3 className="font-serif text-3xl uppercase tracking-tight">The Next Drop</h3>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <span className="font-sans text-[10px] uppercase tracking-[0.4em] opacity-40">04 Pieces</span>
+          </Reveal>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-20">
+          {upcomingDrops.map((item, index) => (
+            <div key={item.id}>
+              <Reveal delay={index * 0.1}>
+                <div className="group cursor-pointer">
+                  <div className="aspect-[4/5] overflow-hidden bg-gray-50 mb-8 relative">
+                    <motion.img 
+                      src={item.image} 
+                      alt={item.name}
+                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000"
+                      referrerPolicy="no-referrer"
+                    />
+                    <div className="absolute top-6 right-6">
+                      <span className="px-3 py-1 bg-white text-black font-sans text-[9px] uppercase tracking-widest font-bold">
+                        {item.category}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex justify-between items-baseline">
+                    <div>
+                      <h4 className="font-serif text-2xl uppercase tracking-tight mb-1">{item.name}</h4>
+                      <p className="font-sans text-[10px] text-black/40 uppercase tracking-widest">
+                        {item.description}
+                      </p>
+                    </div>
+                    <span className="font-sans text-[11px] uppercase tracking-[0.2em] text-jedo-red font-bold">{item.price}</span>
+                  </div>
+                </div>
+              </Reveal>
+            </div>
+          ))}
+        </div>
+      </SectionFrame>
+
+      {/* Brief Newsletter */}
+      <SectionFrame className="py-32 border-t border-black/5">
+        <div className="max-w-2xl mx-auto text-center">
+          <Reveal>
+            <h3 className="font-serif text-3xl uppercase tracking-tight mb-6">Join the Identity</h3>
+            <p className="font-sans text-[10px] text-black/50 uppercase tracking-[0.4em] leading-relaxed mb-12">
+              Early access to all drops and studio updates.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <input 
+                type="email" 
+                placeholder="EMAIL" 
+                className="bg-transparent border-b border-black/20 py-4 px-2 font-sans text-[10px] tracking-[0.5em] focus:outline-none focus:border-black transition-colors w-full sm:w-64"
+              />
+              <button className="px-8 py-4 bg-black text-white font-sans text-[10px] font-bold uppercase tracking-[0.4em] hover:bg-jedo-red transition-colors duration-500">
+                Subscribe
+              </button>
+            </div>
+          </Reveal>
+        </div>
       </SectionFrame>
     </PageTransition>
   );
